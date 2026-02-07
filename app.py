@@ -18,8 +18,15 @@ st.info("Sistem ini menggunakan Google Gemini Flash untuk menyemak karangan berd
 # --- SIDEBAR: TETAPAN ---
 with st.sidebar:
     st.header("⚙️ Tetapan / Settings")
-    api_key = st.text_input("Masukkan Google Gemini API Key:", type="password")
-    st.markdown("[Dapatkan API Key di sini](https://aistudio.google.com/app/apikey)")
+    
+    # Cek jika kunci ada dalam Secrets (Untuk kegunaan awam)
+    if "GOOGLE_API_KEY" in st.secrets:
+        api_key = st.secrets["GOOGLE_API_KEY"]
+        st.success("✅ Kunci API telah diaktifkan secara automatik oleh pemilik.")
+    else:
+        # Jika tiada secrets, minta pengguna masukkan sendiri
+        api_key = st.text_input("Masukkan Google Gemini API Key:", type="password")
+        st.caption("Dapatkan kunci di aistudio.google.com")
     
     st.divider()
     
@@ -30,7 +37,6 @@ with st.sidebar:
     part_selection = "General"
     if subjek == "English (SPM 1119)":
         part_selection = st.selectbox("Select Part:", ["Part 1 (Short Message)", "Part 2 (Guided Writing)", "Part 3 (Extended Writing)"])
-
 # --- FUNGSI PROMPT KHAS (RUBRIK) ---
 def get_system_prompt(subject, part):
     if subject == "Bahasa Melayu (SPM 1103)":
